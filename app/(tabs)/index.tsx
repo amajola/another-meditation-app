@@ -1,70 +1,111 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import React from "react";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { CARD_PADDING } from "@/constants/styles";
+import { ScrollView, StyleSheet, View } from "react-native";
+import LargeCard from "@/components/layout/LargeCard";
+import WideCard from "@/components/layout/WideCard";
+import Spacer from "@/components/Spacers";
+import HorizontalCards from "@/components/layout/HorizontalCard";
+import BannerCard from "@/components/layout/BannerCard";
+import { HomeScreenData } from "@/assets/data";
+import { useNavigation } from "expo-router";
 
 export default function HomeScreen() {
+  const data = HomeScreenData;
+  const navigation = useNavigation();
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <ThemedView>
+      <ScrollView>
+        <View style={[styles.logoContainer, styles.scrollViewChild]}>
+          <ThemedText type="title" style={styles.logoText}>
+            Slient
+          </ThemedText>
+          <View style={styles.logo} />
+          <ThemedText type="title" style={styles.logoText}>
+            Moon
+          </ThemedText>
+        </View>
+
+        <View style={styles.scrollViewChild}>
+          <ThemedText type="title">Good Morning, Afsar</ThemedText>
+          <ThemedText type="subtitle">We Wish you have a good day</ThemedText>
+        </View>
+
+        <View style={styles.largeCardContainer}>
+          {data.slice(0, 2).map((element) => (
+            <LargeCard
+              key={element.title}
+              title={element.title}
+              buttonTitle="Start"
+              subText={element.subtext}
+              duration={element.duration}
+              onClick={() => {
+                navigation.navigate("detail");
+              }}
+            />
+          ))}
+        </View>
+
+        <View style={styles.scrollViewChild}>
+          <WideCard
+            title={data[3].title}
+            subText={data[3].subtext}
+            onClick={() => {}}
+          />
+        </View>
+
+        <View style={styles.scrollViewChild}>
+          <ThemedText type="mediumBold" style={styles.mediumBoldText}>
+            Recomended for you
+          </ThemedText>
+          <Spacer />
+          <Spacer />
+          <HorizontalCards cards={data.slice(4, 10)} />
+        </View>
+
+        <BannerCard
+          title={data[10].title}
+          buttonTitle="Start"
+          subText={data[10].subtext}
+          onClick={() => {}}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      </ScrollView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  // Usings scrollViewChild because gap is not working
+  scrollViewChild: {
+    paddingBottom: 30,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  logoContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 20,
+    justifyContent: "center",
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  logoText: {
+    fontFamily: "Montserrat",
+    letterSpacing: 5,
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  logo: {
+    width: 50,
+    height: 50,
+    borderRadius: 100,
+    backgroundColor: "black",
+  },
+  largeCardContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingBottom: CARD_PADDING,
+  },
+  mediumBoldText: {
+    fontSize: 24,
   },
 });
